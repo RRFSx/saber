@@ -87,12 +87,18 @@ void setupGsiMatchingGrid(const eckit::Configuration & config,
   ASSERT(grid_type == "gaussian" || grid_type == "latlon" || grid_type == "rotated_lonlat");
   const int nlats = config.getInt(GsiGridKey + ".lats");  // pole to pole
   const int nlons = config.getInt(GsiGridKey + ".lons");
-  const double lat_start = config.has(GsiGridKey + ".lat_start") ? config.getDouble(GsiGridKey + ".lat_start") : 0.0;
-  const double lat_end = config.has(GsiGridKey + ".lat_end") ? config.getDouble(GsiGridKey + ".lat_end") : 0.0;
-  const double lon_start = config.has(GsiGridKey + ".lon_start") ? config.getDouble(GsiGridKey + ".lon_start") : 0.0;
-  const double lon_end = config.has(GsiGridKey + ".lon_end") ? config.getDouble(GsiGridKey + ".lon_end") : 0.0;
-  const double north_pole_lat = config.has(GsiGridKey + ".north_pole_lat") ? config.getDouble(GsiGridKey + ".north_pole_lat") : 0.0;
-  const double north_pole_lon = config.has(GsiGridKey + ".north_pole_lon") ? config.getDouble(GsiGridKey + ".north_pole_lon") : 0.0;
+  const double lat_start = config.has(GsiGridKey + ".lat_start") ?
+                           config.getDouble(GsiGridKey + ".lat_start") : 0.0;
+  const double lat_end = config.has(GsiGridKey + ".lat_end") ?
+                         config.getDouble(GsiGridKey + ".lat_end") : 0.0;
+  const double lon_start = config.has(GsiGridKey + ".lon_start") ?
+                           config.getDouble(GsiGridKey + ".lon_start") : 0.0;
+  const double lon_end = config.has(GsiGridKey + ".lon_end") ?
+                         config.getDouble(GsiGridKey + ".lon_end") : 0.0;
+  const double north_pole_lat = config.has(GsiGridKey + ".north_pole_lat") ?
+                                config.getDouble(GsiGridKey + ".north_pole_lat") : 0.0;
+  const double north_pole_lon = config.has(GsiGridKey + ".north_pole_lon") ?
+                                config.getDouble(GsiGridKey + ".north_pole_lon") : 0.0;
 
 
   const auto gsi_gaussian_points = [](const int N) -> std::vector<double> {
@@ -125,7 +131,8 @@ void setupGsiMatchingGrid(const eckit::Configuration & config,
     return lc;
   };
 
-  const auto build_yspace_config = [&](const std::string & grid_type) -> eckit::LocalConfiguration {
+  const auto build_yspace_config = [&](const std::string & grid_type) ->
+                                   eckit::LocalConfiguration {
     eckit::LocalConfiguration lc{};
     if (grid_type == "rotated_lonlat") {
       lc.set("type", "linear");
@@ -144,7 +151,8 @@ void setupGsiMatchingGrid(const eckit::Configuration & config,
     return lc;
   };
 
-  const auto build_projection_config = [&](const std::string & grid_type) -> eckit::LocalConfiguration {
+  const auto build_projection_config = [&](const std::string & grid_type) ->
+                                       eckit::LocalConfiguration {
     eckit::LocalConfiguration lc{};
     lc.set("type", "rotated_lonlat");
     lc.set("north_pole", std::vector<double>{{north_pole_lon, north_pole_lat}});
@@ -155,7 +163,9 @@ void setupGsiMatchingGrid(const eckit::Configuration & config,
   testconfig.set("type", "structured");
   testconfig.set("xspace", build_xspace_config(grid_type));
   testconfig.set("yspace", build_yspace_config(grid_type));
-  if (grid_type == "rotated_lonlat") testconfig.set("projection", build_projection_config(grid_type));
+  if (grid_type == "rotated_lonlat") {
+    testconfig.set("projection", build_projection_config(grid_type));
+  }
   grid = atlas::Grid{testconfig};
 
   const atlas::RegularGrid rg{grid};
